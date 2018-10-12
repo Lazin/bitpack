@@ -6,14 +6,16 @@
 #include <algorithm>
 
 typedef std::uint64_t u64;
-typedef std::int64_t i64;
+typedef std::int64_t  i64;
 typedef std::uint32_t u32;
-typedef std::int32_t i32;
-typedef unsigned char u8;
+typedef std::int32_t  i32;
+typedef std::uint16_t u16;
+typedef std::int16_t  i16;
+typedef unsigned char  u8;
 
 struct RandomWalk {
-    u64                                 value;
-    u64                                 mask;
+    u64 value;
+    u64 mask;
 
     RandomWalk(u64 mask)
         : mask(mask)
@@ -68,8 +70,73 @@ class Encoder {
 public:
     Encoder(MemoryStream& stream) : stream_(stream) {}
 
-    bool _pack(const u64* input, int n) {
+    template<typename T>
+    bool _packN(const u64* input) {
+        for (int i = 0; i < 16; i++) {
+            T bits = static_cast<T>(input[i]);
+            if (!stream_.put_raw(bits)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    bool _pack1(const u64* input) {
+        u16 bits = 0;
+        for (int i = 0; i < 16; i++) {
+            bits |= static_cast<u16>((input[i] & 1) << i);
+        }
+        if (!stream_.put_raw(bits)) {
+            return false;
+        }
+        return true;
+    }
+
+    bool _pack2(const u64* input) {
+        u32 bits = 0;
+        for (int i = 0; i < 16; i++) {
+            bits |= static_cast<u32>((input[i] & 3) << 2*i);
+        }
+        if (!stream_.put_raw(bits)) {
+            return false;
+        }
+        return true;
+    }
+
+    bool _pack3(const u64* input) {
+        u32 lo = 0;
+        u16 hi = 0;
+        lo |= static_cast<u32>((input[0]  & 7));
+        lo |= static_cast<u32>((input[1]  & 7) << 3);
+        lo |= static_cast<u32>((input[2]  & 7) << 6);
+        lo |= static_cast<u32>((input[3]  & 7) << 9);
+        lo |= static_cast<u32>((input[4]  & 7) << 12);
+        lo |= static_cast<u32>((input[5]  & 7) << 15);
+        lo |= static_cast<u32>((input[6]  & 7) << 18);
+        lo |= static_cast<u32>((input[7]  & 7) << 21);
+        lo |= static_cast<u32>((input[8]  & 7) << 24);
+        lo |= static_cast<u32>((input[9]  & 7) << 27);
+        lo |= static_cast<u32>((input[10] & 3) << 30);
+        hi |= static_cast<u32>((input[10] & 4) >> 2);
+        hi |= static_cast<u32>((input[11] & 7) << 1);
+        hi |= static_cast<u32>((input[12] & 7) << 4);
+        hi |= static_cast<u32>((input[13] & 7) << 7);
+        hi |= static_cast<u32>((input[14] & 7) << 10);
+        hi |= static_cast<u32>((input[15] & 7) << 13);
+        if (!stream_.put_raw(lo)) {
+            return false;
+        }
+        if (!stream_.put_raw(hi)) {
+            return false;
+        }
+        return true;
+    }
+
+    template<typename T>
+    void _shiftN(u64* input) {
+        for (int i = 0; i < 16; i++) {
+            input[i] >>= sizeof(T);
+        }
     }
 
     bool pack(const u64* input, int n) {
