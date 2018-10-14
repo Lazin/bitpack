@@ -104,29 +104,145 @@ public:
     }
 
     bool _pack3(const u64* input) {
-        u32 lo = 0;
-        u16 hi = 0;
-        lo |= static_cast<u32>((input[0]  & 7));
-        lo |= static_cast<u32>((input[1]  & 7) << 3);
-        lo |= static_cast<u32>((input[2]  & 7) << 6);
-        lo |= static_cast<u32>((input[3]  & 7) << 9);
-        lo |= static_cast<u32>((input[4]  & 7) << 12);
-        lo |= static_cast<u32>((input[5]  & 7) << 15);
-        lo |= static_cast<u32>((input[6]  & 7) << 18);
-        lo |= static_cast<u32>((input[7]  & 7) << 21);
-        lo |= static_cast<u32>((input[8]  & 7) << 24);
-        lo |= static_cast<u32>((input[9]  & 7) << 27);
-        lo |= static_cast<u32>((input[10] & 3) << 30);
-        hi |= static_cast<u32>((input[10] & 4) >> 2);
-        hi |= static_cast<u32>((input[11] & 7) << 1);
-        hi |= static_cast<u32>((input[12] & 7) << 4);
-        hi |= static_cast<u32>((input[13] & 7) << 7);
-        hi |= static_cast<u32>((input[14] & 7) << 10);
-        hi |= static_cast<u32>((input[15] & 7) << 13);
-        if (!stream_.put_raw(lo)) {
+        u32 bits0 = 0;
+        u16 bits1 = 0;
+        bits0 |= static_cast<u32>((input[0]  & 7));
+        bits0 |= static_cast<u32>((input[1]  & 7) << 3);
+        bits0 |= static_cast<u32>((input[2]  & 7) << 6);
+        bits0 |= static_cast<u32>((input[3]  & 7) << 9);
+        bits0 |= static_cast<u32>((input[4]  & 7) << 12);
+        bits0 |= static_cast<u32>((input[5]  & 7) << 15);
+        bits0 |= static_cast<u32>((input[6]  & 7) << 18);
+        bits0 |= static_cast<u32>((input[7]  & 7) << 21);
+        bits0 |= static_cast<u32>((input[8]  & 7) << 24);
+        bits0 |= static_cast<u32>((input[9]  & 7) << 27);
+        bits0 |= static_cast<u32>((input[10] & 3) << 30);
+        bits1 |= static_cast<u32>((input[10] & 4) >> 2);
+        bits1 |= static_cast<u32>((input[11] & 7) << 1);
+        bits1 |= static_cast<u32>((input[12] & 7) << 4);
+        bits1 |= static_cast<u32>((input[13] & 7) << 7);
+        bits1 |= static_cast<u32>((input[14] & 7) << 10);
+        bits1 |= static_cast<u32>((input[15] & 7) << 13);
+        if (!stream_.put_raw(bits0)) {
             return false;
         }
-        if (!stream_.put_raw(hi)) {
+        if (!stream_.put_raw(bits1)) {
+            return false;
+        }
+        return true;
+    }
+
+    bool _pack4(const u64* input) {
+        u64 bits0 = 0;
+        bits0 |= static_cast<u64>((input[0]  & 0xF));
+        bits0 |= static_cast<u64>((input[1]  & 0xF) << 4);
+        bits0 |= static_cast<u64>((input[2]  & 0xF) << 8);
+        bits0 |= static_cast<u64>((input[3]  & 0xF) << 12);
+        bits0 |= static_cast<u64>((input[4]  & 0xF) << 16);
+        bits0 |= static_cast<u64>((input[5]  & 0xF) << 20);
+        bits0 |= static_cast<u64>((input[6]  & 0xF) << 24);
+        bits0 |= static_cast<u64>((input[7]  & 0xF) << 28);
+        bits0 |= static_cast<u64>((input[8]  & 0xF) << 32);
+        bits0 |= static_cast<u64>((input[9]  & 0xF) << 36);
+        bits0 |= static_cast<u64>((input[10] & 0xF) << 40);
+        bits0 |= static_cast<u64>((input[11] & 0xF) << 44);
+        bits0 |= static_cast<u64>((input[12] & 0xF) << 48);
+        bits0 |= static_cast<u64>((input[13] & 0xF) << 52);
+        bits0 |= static_cast<u64>((input[14] & 0xF) << 52);
+        bits0 |= static_cast<u64>((input[15] & 0xF) << 56);
+        if (!stream_.put_raw(bits0)) {
+            return false;
+        }
+        return true;
+    }
+
+    bool _pack5(const u64* input) {
+        u64 bits0 = 0;
+        u16 bits1 = 0;
+        bits0 |= static_cast<u64>((input[0]  & 0x1F));
+        bits0 |= static_cast<u64>((input[1]  & 0x1F) << 5);
+        bits0 |= static_cast<u64>((input[2]  & 0x1F) << 10);
+        bits0 |= static_cast<u64>((input[3]  & 0x1F) << 15);
+        bits0 |= static_cast<u64>((input[4]  & 0x1F) << 20);
+        bits0 |= static_cast<u64>((input[5]  & 0x1F) << 25);
+        bits0 |= static_cast<u64>((input[6]  & 0x1F) << 30);
+        bits0 |= static_cast<u64>((input[7]  & 0x1F) << 35);
+        bits0 |= static_cast<u64>((input[8]  & 0x1F) << 40);
+        bits0 |= static_cast<u64>((input[9]  & 0x1F) << 45);
+        bits0 |= static_cast<u64>((input[10] & 0x1F) << 50);
+        bits0 |= static_cast<u64>((input[11] & 0x1F) << 55);
+        bits0 |= static_cast<u64>((input[12] & 0x0F) << 60);
+        bits1 |= static_cast<u32>((input[12] & 0x10) >> 4);
+        bits1 |= static_cast<u32>((input[13] & 0x1F) << 1);
+        bits1 |= static_cast<u32>((input[14] & 0x1F) << 6);
+        bits1 |= static_cast<u32>((input[15] & 0x1F) << 11);
+        if (!stream_.put_raw(bits0)) {
+            return false;
+        }
+        if (!stream_.put_raw(bits1)) {
+            return false;
+        }
+        return true;
+    }
+
+    bool _pack6(const u64* input) {
+        u64 bits0 = 0;
+        u32 bits1 = 0;
+        bits0 |= static_cast<u64>((input[0]  & 0x3F));
+        bits0 |= static_cast<u64>((input[1]  & 0x3F) << 6);
+        bits0 |= static_cast<u64>((input[2]  & 0x3F) << 12);
+        bits0 |= static_cast<u64>((input[3]  & 0x3F) << 18);
+        bits0 |= static_cast<u64>((input[4]  & 0x3F) << 24);
+        bits0 |= static_cast<u64>((input[5]  & 0x3F) << 30);
+        bits0 |= static_cast<u64>((input[6]  & 0x3F) << 36);
+        bits0 |= static_cast<u64>((input[7]  & 0x3F) << 42);
+        bits0 |= static_cast<u64>((input[8]  & 0x3F) << 48);
+        bits0 |= static_cast<u64>((input[9]  & 0x3F) << 54);
+        bits0 |= static_cast<u64>((input[10] & 0x0F) << 60);
+        bits1 |= static_cast<u32>((input[10] & 0x30) >> 4);
+        bits1 |= static_cast<u32>((input[11] & 0x3F) << 2);
+        bits1 |= static_cast<u32>((input[12] & 0x3F) << 8);
+        bits1 |= static_cast<u32>((input[13] & 0x3F) << 14);
+        bits1 |= static_cast<u32>((input[14] & 0x3F) << 20);
+        bits1 |= static_cast<u32>((input[15] & 0x3F) << 26);
+        if (!stream_.put_raw(bits0)) {
+            return false;
+        }
+        if (!stream_.put_raw(bits1)) {
+            return false;
+        }
+        return true;
+    }
+
+    bool _pack7(const u64* input) {
+        u64 bits0 = 0;
+        u32 bits1 = 0;
+        u16 bits2 = 0;
+        bits0 |= static_cast<u64>((input[0]  & 0x7F));
+        bits0 |= static_cast<u64>((input[1]  & 0x7F) << 7);
+        bits0 |= static_cast<u64>((input[2]  & 0x7F) << 14);
+        bits0 |= static_cast<u64>((input[3]  & 0x7F) << 21);
+        bits0 |= static_cast<u64>((input[4]  & 0x7F) << 28);
+        bits0 |= static_cast<u64>((input[5]  & 0x7F) << 35);
+        bits0 |= static_cast<u64>((input[6]  & 0x7F) << 42);
+        bits0 |= static_cast<u64>((input[7]  & 0x7F) << 49);
+        bits0 |= static_cast<u64>((input[8]  & 0x7F) << 56);
+        bits0 |= static_cast<u64>((input[9]  & 0x01) << 63);
+        bits1 |= static_cast<u32>((input[9]  & 0x7E) >> 1);
+        bits1 |= static_cast<u32>((input[10] & 0x7F) << 6);
+        bits1 |= static_cast<u32>((input[11] & 0x7F) << 13);
+        bits1 |= static_cast<u32>((input[12] & 0x7F) << 20);
+        bits1 |= static_cast<u32>((input[13] & 0x1F) << 27);
+        bits2 |= static_cast<u16>((input[13] & 0x60) >> 5);
+        bits2 |= static_cast<u16>((input[14] & 0x7F) << 2);
+        bits2 |= static_cast<u16>((input[15] & 0x7F) << 9);
+        if (!stream_.put_raw(bits0)) {
+            return false;
+        }
+        if (!stream_.put_raw(bits1)) {
+            return false;
+        }
+        if (!stream_.put_raw(bits2)) {
             return false;
         }
         return true;
@@ -140,6 +256,121 @@ public:
     }
 
     bool pack(const u64* input, int n) {
+        switch(n) {
+        case 0:
+            return true;
+        case 1:
+            return _pack1(input);
+        case 2:
+            return _pack2(input);
+        case 3:
+            return _pack3(input);
+        case 4:
+            return _pack4(input);
+        case 5:
+            return _pack5(input);
+        case 6:
+            return _pack6(input);
+        case 7:
+            return _pack7(input);
+        case 8:
+            return _packN<u8>(input);
+        case 9:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack1(input);
+        case 10:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack2(input);
+        case 11:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack3(input);
+        case 12:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack4(input);
+        case 13:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack5(input);
+        case 14:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack6(input);
+        case 15:
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack7(input);
+        case 16:
+            return _packN<u16>(input);
+        case 17:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack1(input);
+        case 18:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack2(input);
+        case 19:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack3(input);
+        case 20:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack4(input);
+        case 21:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack5(input);
+        case 22:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack6(input);
+        case 23:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack7(input);
+        case 24:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _packN<u8>(input);
+        }
+    }
+
+    bool dumb_pack(const u64* input, int n) {
         int size = 16;
         u8 bits = 0;
         int ixbits = 0;
