@@ -81,6 +81,13 @@ public:
         return true;
     }
 
+    template <typename T>
+    void _unpackN(const u64* input, int shift) {
+        for (int i = 0; i < 16; i++) {
+            input[i] |= static_cast<u64>(stream_.read_raw<T>()) << shift;
+        }
+    }
+
     bool _pack1(const u64* input) {
         u16 bits = 0;
         for (int i = 0; i < 16; i++) {
@@ -92,6 +99,13 @@ public:
         return true;
     }
 
+    void _unpack1(u64* output, int shift) {
+        u16 bits = stream_.read_raw<u16>();
+        for (int i = 0; i < 16; i++) {
+            output[i] |= static_cast<u64>((bits & (3 << i)) >> i) << shift;
+        }
+    }
+
     bool _pack2(const u64* input) {
         u32 bits = 0;
         for (int i = 0; i < 16; i++) {
@@ -101,6 +115,13 @@ public:
             return false;
         }
         return true;
+    }
+
+    void _unpack2(u64* output, int shift) {
+        u32 bits = stream_.read_raw<u32>();
+        for (int i = 0; i < 16; i++) {
+            output[i] |= static_cast<u64>((bits & (3 << 2*i)) >> 2*i) << shift;
+        }
     }
 
     bool _pack3(const u64* input) {
@@ -132,6 +153,27 @@ public:
         return true;
     }
 
+    void _unpack3(u64* output, int shift) {
+        u32 bits0  = stream_.read_raw<u32>();
+        u16 bits1  = stream_.read_raw<u16>();
+        output[0]  = (bits0 & 7) << shift;
+        output[1]  = (bits0 & (7 << 3)  >> 3)  << shift;
+        output[2]  = (bits0 & (7 << 6)  >> 6)  << shift;
+        output[3]  = (bits0 & (7 << 9)  >> 9)  << shift;
+        output[4]  = (bits0 & (7 << 12) >> 12) << shift;
+        output[5]  = (bits0 & (7 << 15) >> 15) << shift;
+        output[6]  = (bits0 & (7 << 18) >> 18) << shift;
+        output[7]  = (bits0 & (7 << 21) >> 21) << shift;
+        output[8]  = (bits0 & (7 << 24) >> 24) << shift;
+        output[9]  = (bits0 & (7 << 27) >> 27) << shift;
+        output[10] = (bits0 & (3 << 30) >> 30) | (bits1 & 4) << shift;
+        output[11] = (bits1 & (7 << 1)  >> 1)  << shift;
+        output[12] = (bits1 & (7 << 4)  >> 4)  << shift;
+        output[13] = (bits1 & (7 << 7)  >> 7)  << shift;
+        output[14] = (bits1 & (7 << 10) >> 10) << shift;
+        output[15] = (bits1 & (7 << 13) >> 13) << shift;
+    }
+
     bool _pack4(const u64* input) {
         u64 bits0 = 0;
         bits0 |= static_cast<u64>((input[0]  & 0xF));
@@ -148,12 +190,32 @@ public:
         bits0 |= static_cast<u64>((input[11] & 0xF) << 44);
         bits0 |= static_cast<u64>((input[12] & 0xF) << 48);
         bits0 |= static_cast<u64>((input[13] & 0xF) << 52);
-        bits0 |= static_cast<u64>((input[14] & 0xF) << 52);
-        bits0 |= static_cast<u64>((input[15] & 0xF) << 56);
+        bits0 |= static_cast<u64>((input[14] & 0xF) << 56);
+        bits0 |= static_cast<u64>((input[15] & 0xF) << 60);
         if (!stream_.put_raw(bits0)) {
             return false;
         }
         return true;
+    }
+
+    void _unpack4(u64* output, int shift) {
+        u64 bits0  = stream_.read_raw<u64>();
+        output[0]  = (bits0 & 0xF) << shift;
+        output[1]  = (bits0 & (15ull << 4)  >> 4)  << shift;
+        output[2]  = (bits0 & (15ull << 8)  >> 8)  << shift;
+        output[3]  = (bits0 & (15ull << 12)  >> 12)  << shift;
+        output[4]  = (bits0 & (15ull << 16)  >> 16)  << shift;
+        output[5]  = (bits0 & (15ull << 20)  >> 20)  << shift;
+        output[6]  = (bits0 & (15ull << 24)  >> 24)  << shift;
+        output[7]  = (bits0 & (15ull << 28)  >> 28)  << shift;
+        output[8]  = (bits0 & (15ull << 32)  >> 32)  << shift;
+        output[9]  = (bits0 & (15ull << 36)  >> 36)  << shift;
+        output[10] = (bits0 & (15ull << 40)  >> 40)  << shift;
+        output[11] = (bits0 & (15ull << 44)  >> 44)  << shift;
+        output[12] = (bits0 & (15ull << 48)  >> 48)  << shift;
+        output[13] = (bits0 & (15ull << 52)  >> 52)  << shift;
+        output[14] = (bits0 & (15ull << 56)  >> 56)  << shift;
+        output[15] = (bits0 & (15ull << 60)  >> 60)  << shift;
     }
 
     bool _pack5(const u64* input) {
@@ -183,6 +245,27 @@ public:
             return false;
         }
         return true;
+    }
+
+    void _unpack5(u64* output, int shift) {
+        u32 bits0  = stream_.read_raw<u64>();
+        u32 bits1  = stream_.read_raw<u16>();
+        output[0]  = (bits0 & 0x1F) << shift;
+        output[1]  = (bits0 & (0x1Full << 5)  >> 5)  << shift;
+        output[2]  = (bits0 & (0x1Full << 10) >> 10) << shift;
+        output[3]  = (bits0 & (0x1Full << 15) >> 15) << shift;
+        output[4]  = (bits0 & (0x1Full << 20) >> 20) << shift;
+        output[5]  = (bits0 & (0x1Full << 25) >> 25) << shift;
+        output[6]  = (bits0 & (0x1Full << 30) >> 30) << shift;
+        output[7]  = (bits0 & (0x1Full << 35) >> 35) << shift;
+        output[8]  = (bits0 & (0x1Full << 40) >> 40) << shift;
+        output[9]  = (bits0 & (0x1Full << 45) >> 45) << shift;
+        output[10] = (bits0 & (0x1Full << 50) >> 50) << shift;
+        output[11] = (bits0 & (0x1Full << 55) >> 55) << shift;
+        output[12] = (bits0 & (0x0Full << 60) >> 60) | ((bits1 & 1) << 4) << shift;
+        output[13] = (bits1 & (0x1Full << 1)  >> 1)  << shift;
+        output[14] = (bits1 & (0x1Full << 6)  >> 6)  << shift;
+        output[15] = (bits1 & (0x1Full << 11) >> 11) << shift;
     }
 
     bool _pack6(const u64* input) {
@@ -255,7 +338,7 @@ public:
         }
     }
 
-    bool pack(const u64* input, int n) {
+    bool pack(u64* input, int n) {
         switch(n) {
         case 0:
             return true;
@@ -367,6 +450,382 @@ public:
             }
             _shiftN<u16>(input);
             return _packN<u8>(input);
+        case 25:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack1(input);
+        case 26:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack2(input);
+        case 27:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack3(input);
+        case 28:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack4(input);
+        case 29:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack5(input);
+        case 30:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack6(input);
+        case 31:
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack7(input);
+        case 32:
+            return _packN<u32>(input);
+        case 33:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack1(input);
+        case 34:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack2(input);
+        case 35:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack3(input);
+        case 36:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack4(input);
+        case 37:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack5(input);
+        case 38:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack6(input);
+        case 39:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _pack7(input);
+        case 40:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _packN<u8>(input);
+        case 41:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack1(input);
+        case 42:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack2(input);
+        case 43:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack3(input);
+        case 44:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack4(input);
+        case 45:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack5(input);
+        case 46:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack6(input);
+        case 47:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack7(input);
+        case 48:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            return _packN<u16>(input);
+        case 49:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack1(input);
+        case 50:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack2(input);
+        case 51:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack3(input);
+        case 52:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack4(input);
+        case 53:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack5(input);
+        case 54:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack6(input);
+        case 55:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _pack7(input);
+        case 56:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            return _packN<u8>(input);
+        case 57:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack1(input);
+        case 58:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack2(input);
+        case 59:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack3(input);
+        case 60:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack4(input);
+        case 61:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack5(input);
+        case 62:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack6(input);
+        case 63:
+            if (!_packN<u32>(input)) {
+                return false;
+            }
+            _shiftN<u32>(input);
+            if (!_packN<u16>(input)) {
+                return false;
+            }
+            _shiftN<u16>(input);
+            if (!_packN<u8>(input)) {
+                return false;
+            }
+            _shiftN<u8>(input);
+            return _pack7(input);
+        case 64:
+            return _packN<u64>(input);
         }
     }
 
