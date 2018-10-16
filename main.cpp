@@ -82,9 +82,10 @@ public:
     }
 
     template <typename T>
-    void _unpackN(const u64* input, int shift) {
+    void _unpackN(u64* input, int shift) {
         for (int i = 0; i < 16; i++) {
-            input[i] |= static_cast<u64>(stream_.read_raw<T>()) << shift;
+            T val = static_cast<T>(stream_.read_raw<T>());
+            input[i] |= static_cast<u64>(val) << shift;
         }
     }
 
@@ -119,8 +120,8 @@ public:
 
     void _unpack2(u64* output, int shift) {
         u32 bits = stream_.read_raw<u32>();
-        for (int i = 0; i < 16; i++) {
-            output[i] |= static_cast<u64>((bits & (3 << 2*i)) >> 2*i) << shift;
+        for (u32 i = 0; i < 16; i++) {
+            output[i] |= static_cast<u64>((bits & (3u << 2*i)) >> 2*i) << shift;
         }
     }
 
@@ -156,22 +157,22 @@ public:
     void _unpack3(u64* output, int shift) {
         u32 bits0  = stream_.read_raw<u32>();
         u16 bits1  = stream_.read_raw<u16>();
-        output[0]  = (bits0 & 7) << shift;
-        output[1]  = (bits0 & (7 << 3)  >> 3)  << shift;
-        output[2]  = (bits0 & (7 << 6)  >> 6)  << shift;
-        output[3]  = (bits0 & (7 << 9)  >> 9)  << shift;
-        output[4]  = (bits0 & (7 << 12) >> 12) << shift;
-        output[5]  = (bits0 & (7 << 15) >> 15) << shift;
-        output[6]  = (bits0 & (7 << 18) >> 18) << shift;
-        output[7]  = (bits0 & (7 << 21) >> 21) << shift;
-        output[8]  = (bits0 & (7 << 24) >> 24) << shift;
-        output[9]  = (bits0 & (7 << 27) >> 27) << shift;
-        output[10] = (bits0 & (3 << 30) >> 30) | (bits1 & 4) << shift;
-        output[11] = (bits1 & (7 << 1)  >> 1)  << shift;
-        output[12] = (bits1 & (7 << 4)  >> 4)  << shift;
-        output[13] = (bits1 & (7 << 7)  >> 7)  << shift;
-        output[14] = (bits1 & (7 << 10) >> 10) << shift;
-        output[15] = (bits1 & (7 << 13) >> 13) << shift;
+        output[0]  = ((bits0 & 7)) << shift;
+        output[1]  = ((bits0 & (7u <<  3)) >> 3)  << shift;
+        output[2]  = ((bits0 & (7u <<  6)) >> 6)  << shift;
+        output[3]  = ((bits0 & (7u <<  9)) >> 9)  << shift;
+        output[4]  = ((bits0 & (7u << 12)) >> 12) << shift;
+        output[5]  = ((bits0 & (7u << 15)) >> 15) << shift;
+        output[6]  = ((bits0 & (7u << 18)) >> 18) << shift;
+        output[7]  = ((bits0 & (7u << 21)) >> 21) << shift;
+        output[8]  = ((bits0 & (7u << 24)) >> 24) << shift;
+        output[9]  = ((bits0 & (7u << 27)) >> 27) << shift;
+        output[10] = (((bits0 & (3u << 30)) >> 30) | (bits1 & 4)) << shift;
+        output[11] = ((bits1 & (7u <<  1)) >> 1)  << shift;
+        output[12] = ((bits1 & (7u <<  4)) >> 4)  << shift;
+        output[13] = ((bits1 & (7u <<  7)) >> 7)  << shift;
+        output[14] = ((bits1 & (7u << 10)) >> 10) << shift;
+        output[15] = ((bits1 & (7u << 13)) >> 13) << shift;
     }
 
     bool _pack4(const u64* input) {
@@ -200,22 +201,22 @@ public:
 
     void _unpack4(u64* output, int shift) {
         u64 bits0  = stream_.read_raw<u64>();
-        output[0]  = (bits0 & 0xF) << shift;
-        output[1]  = (bits0 & (15ull << 4)  >> 4)  << shift;
-        output[2]  = (bits0 & (15ull << 8)  >> 8)  << shift;
-        output[3]  = (bits0 & (15ull << 12)  >> 12)  << shift;
-        output[4]  = (bits0 & (15ull << 16)  >> 16)  << shift;
-        output[5]  = (bits0 & (15ull << 20)  >> 20)  << shift;
-        output[6]  = (bits0 & (15ull << 24)  >> 24)  << shift;
-        output[7]  = (bits0 & (15ull << 28)  >> 28)  << shift;
-        output[8]  = (bits0 & (15ull << 32)  >> 32)  << shift;
-        output[9]  = (bits0 & (15ull << 36)  >> 36)  << shift;
-        output[10] = (bits0 & (15ull << 40)  >> 40)  << shift;
-        output[11] = (bits0 & (15ull << 44)  >> 44)  << shift;
-        output[12] = (bits0 & (15ull << 48)  >> 48)  << shift;
-        output[13] = (bits0 & (15ull << 52)  >> 52)  << shift;
-        output[14] = (bits0 & (15ull << 56)  >> 56)  << shift;
-        output[15] = (bits0 & (15ull << 60)  >> 60)  << shift;
+        output[0]  = ((bits0 & 0xF)) << shift;
+        output[1]  = ((bits0 & (15ull <<  4)) >>  4)  << shift;
+        output[2]  = ((bits0 & (15ull <<  8)) >>  8)  << shift;
+        output[3]  = ((bits0 & (15ull << 12)) >> 12)  << shift;
+        output[4]  = ((bits0 & (15ull << 16)) >> 16)  << shift;
+        output[5]  = ((bits0 & (15ull << 20)) >> 20)  << shift;
+        output[6]  = ((bits0 & (15ull << 24)) >> 24)  << shift;
+        output[7]  = ((bits0 & (15ull << 28)) >> 28)  << shift;
+        output[8]  = ((bits0 & (15ull << 32)) >> 32)  << shift;
+        output[9]  = ((bits0 & (15ull << 36)) >> 36)  << shift;
+        output[10] = ((bits0 & (15ull << 40)) >> 40)  << shift;
+        output[11] = ((bits0 & (15ull << 44)) >> 44)  << shift;
+        output[12] = ((bits0 & (15ull << 48)) >> 48)  << shift;
+        output[13] = ((bits0 & (15ull << 52)) >> 52)  << shift;
+        output[14] = ((bits0 & (15ull << 56)) >> 56)  << shift;
+        output[15] = ((bits0 & (15ull << 60)) >> 60)  << shift;
     }
 
     bool _pack5(const u64* input) {
@@ -248,24 +249,24 @@ public:
     }
 
     void _unpack5(u64* output, int shift) {
-        u32 bits0  = stream_.read_raw<u64>();
-        u32 bits1  = stream_.read_raw<u16>();
-        output[0]  = (bits0 & 0x1F) << shift;
-        output[1]  = (bits0 & (0x1Full << 5)  >> 5)  << shift;
-        output[2]  = (bits0 & (0x1Full << 10) >> 10) << shift;
-        output[3]  = (bits0 & (0x1Full << 15) >> 15) << shift;
-        output[4]  = (bits0 & (0x1Full << 20) >> 20) << shift;
-        output[5]  = (bits0 & (0x1Full << 25) >> 25) << shift;
-        output[6]  = (bits0 & (0x1Full << 30) >> 30) << shift;
-        output[7]  = (bits0 & (0x1Full << 35) >> 35) << shift;
-        output[8]  = (bits0 & (0x1Full << 40) >> 40) << shift;
-        output[9]  = (bits0 & (0x1Full << 45) >> 45) << shift;
-        output[10] = (bits0 & (0x1Full << 50) >> 50) << shift;
-        output[11] = (bits0 & (0x1Full << 55) >> 55) << shift;
-        output[12] = (bits0 & (0x0Full << 60) >> 60) | ((bits1 & 1) << 4) << shift;
-        output[13] = (bits1 & (0x1Full << 1)  >> 1)  << shift;
-        output[14] = (bits1 & (0x1Full << 6)  >> 6)  << shift;
-        output[15] = (bits1 & (0x1Full << 11) >> 11) << shift;
+        u64 bits0  = stream_.read_raw<u64>();
+        u64 bits1  = stream_.read_raw<u16>();
+        output[0]  = ((bits0 & 0x1F)) << shift;
+        output[1]  = ((bits0 & (0x1Full <<  5)) >>  5) << shift;
+        output[2]  = ((bits0 & (0x1Full << 10)) >> 10) << shift;
+        output[3]  = ((bits0 & (0x1Full << 15)) >> 15) << shift;
+        output[4]  = ((bits0 & (0x1Full << 20)) >> 20) << shift;
+        output[5]  = ((bits0 & (0x1Full << 25)) >> 25) << shift;
+        output[6]  = ((bits0 & (0x1Full << 30)) >> 30) << shift;
+        output[7]  = ((bits0 & (0x1Full << 35)) >> 35) << shift;
+        output[8]  = ((bits0 & (0x1Full << 40)) >> 40) << shift;
+        output[9]  = ((bits0 & (0x1Full << 45)) >> 45) << shift;
+        output[10] = ((bits0 & (0x1Full << 50)) >> 50) << shift;
+        output[11] = ((bits0 & (0x1Full << 55)) >> 55) << shift;
+        output[12] = (((bits0 & (0x0Full << 60)) >> 60) | ((bits1 & 1) << 4)) << shift;
+        output[13] = ((bits1 & (0x1Full <<  1)) >>  1) << shift;
+        output[14] = ((bits1 & (0x1Full <<  6)) >>  6) << shift;
+        output[15] = ((bits1 & (0x1Full << 11)) >> 11) << shift;
     }
 
     bool _pack6(const u64* input) {
@@ -295,6 +296,27 @@ public:
             return false;
         }
         return true;
+    }
+
+    void _unpack6(u64* output, int shift) {
+        u64 bits0  = stream_.read_raw<u64>();
+        u64 bits1  = stream_.read_raw<u32>();
+        output[0]  = ((bits0 & 0x3F)) << shift;
+        output[1]  = ((bits0 & (0x3Full <<  6)) >>  6) << shift;
+        output[2]  = ((bits0 & (0x3Full << 12)) >> 12) << shift;
+        output[3]  = ((bits0 & (0x3Full << 18)) >> 18) << shift;
+        output[4]  = ((bits0 & (0x3Full << 24)) >> 24) << shift;
+        output[5]  = ((bits0 & (0x3Full << 30)) >> 30) << shift;
+        output[6]  = ((bits0 & (0x3Full << 36)) >> 36) << shift;
+        output[7]  = ((bits0 & (0x3Full << 42)) >> 42) << shift;
+        output[8]  = ((bits0 & (0x3Full << 48)) >> 48) << shift;
+        output[9]  = ((bits0 & (0x3Full << 54)) >> 54) << shift;
+        output[10] = (((bits0 & (0xFull << 60)) >> 60) | (bits1 & 0x3) << 2) << shift;
+        output[11] = ((bits1 & (0x3Full <<  2)) >>  2) << shift;
+        output[12] = ((bits1 & (0x3Full <<  8)) >>  8) << shift;
+        output[13] = ((bits1 & (0x3Full << 14)) >> 14) << shift;
+        output[14] = ((bits1 & (0x3Full << 20)) >> 20) << shift;
+        output[15] = ((bits1 & (0x3Full << 26)) >> 26) << shift;
     }
 
     bool _pack7(const u64* input) {
