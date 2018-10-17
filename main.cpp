@@ -157,22 +157,22 @@ public:
     void _unpack3(u64* output, int shift) {
         u32 bits0  = stream_.read_raw<u32>();
         u16 bits1  = stream_.read_raw<u16>();
-        output[0]  = ((bits0 & 7)) << shift;
-        output[1]  = ((bits0 & (7u <<  3)) >> 3)  << shift;
-        output[2]  = ((bits0 & (7u <<  6)) >> 6)  << shift;
-        output[3]  = ((bits0 & (7u <<  9)) >> 9)  << shift;
-        output[4]  = ((bits0 & (7u << 12)) >> 12) << shift;
-        output[5]  = ((bits0 & (7u << 15)) >> 15) << shift;
-        output[6]  = ((bits0 & (7u << 18)) >> 18) << shift;
-        output[7]  = ((bits0 & (7u << 21)) >> 21) << shift;
-        output[8]  = ((bits0 & (7u << 24)) >> 24) << shift;
-        output[9]  = ((bits0 & (7u << 27)) >> 27) << shift;
-        output[10] = (((bits0 & (3u << 30)) >> 30) | (bits1 & 4)) << shift;
-        output[11] = ((bits1 & (7u <<  1)) >> 1)  << shift;
-        output[12] = ((bits1 & (7u <<  4)) >> 4)  << shift;
-        output[13] = ((bits1 & (7u <<  7)) >> 7)  << shift;
-        output[14] = ((bits1 & (7u << 10)) >> 10) << shift;
-        output[15] = ((bits1 & (7u << 13)) >> 13) << shift;
+        output[0]  |= ((bits0 & 7)) << shift;
+        output[1]  |= ((bits0 & (7u <<  3)) >> 3)  << shift;
+        output[2]  |= ((bits0 & (7u <<  6)) >> 6)  << shift;
+        output[3]  |= ((bits0 & (7u <<  9)) >> 9)  << shift;
+        output[4]  |= ((bits0 & (7u << 12)) >> 12) << shift;
+        output[5]  |= ((bits0 & (7u << 15)) >> 15) << shift;
+        output[6]  |= ((bits0 & (7u << 18)) >> 18) << shift;
+        output[7]  |= ((bits0 & (7u << 21)) >> 21) << shift;
+        output[8]  |= ((bits0 & (7u << 24)) >> 24) << shift;
+        output[9]  |= ((bits0 & (7u << 27)) >> 27) << shift;
+        output[10] |= (((bits0 & (3u << 30)) >> 30) | (bits1 & 4)) << shift;
+        output[11] |= ((bits1 & (7u <<  1)) >> 1)  << shift;
+        output[12] |= ((bits1 & (7u <<  4)) >> 4)  << shift;
+        output[13] |= ((bits1 & (7u <<  7)) >> 7)  << shift;
+        output[14] |= ((bits1 & (7u << 10)) >> 10) << shift;
+        output[15] |= ((bits1 & (7u << 13)) >> 13) << shift;
     }
 
     bool _pack4(const u64* input) {
@@ -201,22 +201,22 @@ public:
 
     void _unpack4(u64* output, int shift) {
         u64 bits0  = stream_.read_raw<u64>();
-        output[0]  = ((bits0 & 0xF)) << shift;
-        output[1]  = ((bits0 & (15ull <<  4)) >>  4)  << shift;
-        output[2]  = ((bits0 & (15ull <<  8)) >>  8)  << shift;
-        output[3]  = ((bits0 & (15ull << 12)) >> 12)  << shift;
-        output[4]  = ((bits0 & (15ull << 16)) >> 16)  << shift;
-        output[5]  = ((bits0 & (15ull << 20)) >> 20)  << shift;
-        output[6]  = ((bits0 & (15ull << 24)) >> 24)  << shift;
-        output[7]  = ((bits0 & (15ull << 28)) >> 28)  << shift;
-        output[8]  = ((bits0 & (15ull << 32)) >> 32)  << shift;
-        output[9]  = ((bits0 & (15ull << 36)) >> 36)  << shift;
-        output[10] = ((bits0 & (15ull << 40)) >> 40)  << shift;
-        output[11] = ((bits0 & (15ull << 44)) >> 44)  << shift;
-        output[12] = ((bits0 & (15ull << 48)) >> 48)  << shift;
-        output[13] = ((bits0 & (15ull << 52)) >> 52)  << shift;
-        output[14] = ((bits0 & (15ull << 56)) >> 56)  << shift;
-        output[15] = ((bits0 & (15ull << 60)) >> 60)  << shift;
+        output[0]  |= ((bits0 & 0xF)) << shift;
+        output[1]  |= ((bits0 & (15ull <<  4)) >>  4)  << shift;
+        output[2]  |= ((bits0 & (15ull <<  8)) >>  8)  << shift;
+        output[3]  |= ((bits0 & (15ull << 12)) >> 12)  << shift;
+        output[4]  |= ((bits0 & (15ull << 16)) >> 16)  << shift;
+        output[5]  |= ((bits0 & (15ull << 20)) >> 20)  << shift;
+        output[6]  |= ((bits0 & (15ull << 24)) >> 24)  << shift;
+        output[7]  |= ((bits0 & (15ull << 28)) >> 28)  << shift;
+        output[8]  |= ((bits0 & (15ull << 32)) >> 32)  << shift;
+        output[9]  |= ((bits0 & (15ull << 36)) >> 36)  << shift;
+        output[10] |= ((bits0 & (15ull << 40)) >> 40)  << shift;
+        output[11] |= ((bits0 & (15ull << 44)) >> 44)  << shift;
+        output[12] |= ((bits0 & (15ull << 48)) >> 48)  << shift;
+        output[13] |= ((bits0 & (15ull << 52)) >> 52)  << shift;
+        output[14] |= ((bits0 & (15ull << 56)) >> 56)  << shift;
+        output[15] |= ((bits0 & (15ull << 60)) >> 60)  << shift;
     }
 
     bool _pack5(const u64* input) {
@@ -251,22 +251,22 @@ public:
     void _unpack5(u64* output, int shift) {
         u64 bits0  = stream_.read_raw<u64>();
         u64 bits1  = stream_.read_raw<u16>();
-        output[0]  = ((bits0 & 0x1F)) << shift;
-        output[1]  = ((bits0 & (0x1Full <<  5)) >>  5) << shift;
-        output[2]  = ((bits0 & (0x1Full << 10)) >> 10) << shift;
-        output[3]  = ((bits0 & (0x1Full << 15)) >> 15) << shift;
-        output[4]  = ((bits0 & (0x1Full << 20)) >> 20) << shift;
-        output[5]  = ((bits0 & (0x1Full << 25)) >> 25) << shift;
-        output[6]  = ((bits0 & (0x1Full << 30)) >> 30) << shift;
-        output[7]  = ((bits0 & (0x1Full << 35)) >> 35) << shift;
-        output[8]  = ((bits0 & (0x1Full << 40)) >> 40) << shift;
-        output[9]  = ((bits0 & (0x1Full << 45)) >> 45) << shift;
-        output[10] = ((bits0 & (0x1Full << 50)) >> 50) << shift;
-        output[11] = ((bits0 & (0x1Full << 55)) >> 55) << shift;
-        output[12] = (((bits0 & (0x0Full << 60)) >> 60) | ((bits1 & 1) << 4)) << shift;
-        output[13] = ((bits1 & (0x1Full <<  1)) >>  1) << shift;
-        output[14] = ((bits1 & (0x1Full <<  6)) >>  6) << shift;
-        output[15] = ((bits1 & (0x1Full << 11)) >> 11) << shift;
+        output[0]  |= ((bits0 & 0x1F)) << shift;
+        output[1]  |= ((bits0 & (0x1Full <<  5)) >>  5) << shift;
+        output[2]  |= ((bits0 & (0x1Full << 10)) >> 10) << shift;
+        output[3]  |= ((bits0 & (0x1Full << 15)) >> 15) << shift;
+        output[4]  |= ((bits0 & (0x1Full << 20)) >> 20) << shift;
+        output[5]  |= ((bits0 & (0x1Full << 25)) >> 25) << shift;
+        output[6]  |= ((bits0 & (0x1Full << 30)) >> 30) << shift;
+        output[7]  |= ((bits0 & (0x1Full << 35)) >> 35) << shift;
+        output[8]  |= ((bits0 & (0x1Full << 40)) >> 40) << shift;
+        output[9]  |= ((bits0 & (0x1Full << 45)) >> 45) << shift;
+        output[10] |= ((bits0 & (0x1Full << 50)) >> 50) << shift;
+        output[11] |= ((bits0 & (0x1Full << 55)) >> 55) << shift;
+        output[12] |= (((bits0 & (0x0Full << 60)) >> 60) | ((bits1 & 1) << 4)) << shift;
+        output[13] |= ((bits1 & (0x1Full <<  1)) >>  1) << shift;
+        output[14] |= ((bits1 & (0x1Full <<  6)) >>  6) << shift;
+        output[15] |= ((bits1 & (0x1Full << 11)) >> 11) << shift;
     }
 
     bool _pack6(const u64* input) {
@@ -301,22 +301,22 @@ public:
     void _unpack6(u64* output, int shift) {
         u64 bits0  = stream_.read_raw<u64>();
         u64 bits1  = stream_.read_raw<u32>();
-        output[0]  = ((bits0 & 0x3F)) << shift;
-        output[1]  = ((bits0 & (0x3Full <<  6)) >>  6) << shift;
-        output[2]  = ((bits0 & (0x3Full << 12)) >> 12) << shift;
-        output[3]  = ((bits0 & (0x3Full << 18)) >> 18) << shift;
-        output[4]  = ((bits0 & (0x3Full << 24)) >> 24) << shift;
-        output[5]  = ((bits0 & (0x3Full << 30)) >> 30) << shift;
-        output[6]  = ((bits0 & (0x3Full << 36)) >> 36) << shift;
-        output[7]  = ((bits0 & (0x3Full << 42)) >> 42) << shift;
-        output[8]  = ((bits0 & (0x3Full << 48)) >> 48) << shift;
-        output[9]  = ((bits0 & (0x3Full << 54)) >> 54) << shift;
-        output[10] = (((bits0 & (0xFull << 60)) >> 60) | (bits1 & 0x3) << 2) << shift;
-        output[11] = ((bits1 & (0x3Full <<  2)) >>  2) << shift;
-        output[12] = ((bits1 & (0x3Full <<  8)) >>  8) << shift;
-        output[13] = ((bits1 & (0x3Full << 14)) >> 14) << shift;
-        output[14] = ((bits1 & (0x3Full << 20)) >> 20) << shift;
-        output[15] = ((bits1 & (0x3Full << 26)) >> 26) << shift;
+        output[0]  |= ((bits0 & 0x3F)) << shift;
+        output[1]  |= ((bits0 & (0x3Full <<  6)) >>  6) << shift;
+        output[2]  |= ((bits0 & (0x3Full << 12)) >> 12) << shift;
+        output[3]  |= ((bits0 & (0x3Full << 18)) >> 18) << shift;
+        output[4]  |= ((bits0 & (0x3Full << 24)) >> 24) << shift;
+        output[5]  |= ((bits0 & (0x3Full << 30)) >> 30) << shift;
+        output[6]  |= ((bits0 & (0x3Full << 36)) >> 36) << shift;
+        output[7]  |= ((bits0 & (0x3Full << 42)) >> 42) << shift;
+        output[8]  |= ((bits0 & (0x3Full << 48)) >> 48) << shift;
+        output[9]  |= ((bits0 & (0x3Full << 54)) >> 54) << shift;
+        output[10] |= (((bits0 & (0xFull << 60)) >> 60) | (bits1 & 0x3) << 2) << shift;
+        output[11] |= ((bits1 & (0x3Full <<  2)) >>  2) << shift;
+        output[12] |= ((bits1 & (0x3Full <<  8)) >>  8) << shift;
+        output[13] |= ((bits1 & (0x3Full << 14)) >> 14) << shift;
+        output[14] |= ((bits1 & (0x3Full << 20)) >> 20) << shift;
+        output[15] |= ((bits1 & (0x3Full << 26)) >> 26) << shift;
     }
 
     bool _pack7(const u64* input) {
@@ -351,6 +351,28 @@ public:
             return false;
         }
         return true;
+    }
+
+    void _unpack7(u64* output, int shift) {
+        u64 bits0  = stream_.read_raw<u64>();
+        u64 bits1  = stream_.read_raw<u32>();
+        u64 bits2  = stream_.read_raw<u16>();
+        output[0]  |= ((bits0 & 0x7F)) << shift;
+        output[1]  |= ((bits0 & (0x7Full <<  7)) >>  7) << shift;
+        output[2]  |= ((bits0 & (0x7Full << 14)) >> 14) << shift;
+        output[3]  |= ((bits0 & (0x7Full << 21)) >> 21) << shift;
+        output[4]  |= ((bits0 & (0x7Full << 28)) >> 28) << shift;
+        output[5]  |= ((bits0 & (0x7Full << 35)) >> 35) << shift;
+        output[6]  |= ((bits0 & (0x7Full << 42)) >> 42) << shift;
+        output[7]  |= ((bits0 & (0x7Full << 49)) >> 49) << shift;
+        output[8]  |= ((bits0 & (0x7Full << 56)) >> 56) << shift;
+        output[9]  |= (((bits0 & (0x01ull << 63)) >> 63) | ((bits1 & 0x3F) << 1)) << shift;
+        output[10] |= ((bits1 & (0x7Full <<  6)) >>  6) << shift;
+        output[11] |= ((bits1 & (0x7Full << 13)) >> 13) << shift;
+        output[12] |= ((bits1 & (0x7Full << 20)) >> 20) << shift;
+        output[13] |= (((bits1 & (0x1Full << 27)) >> 27) | ((bits2 & 0x03) << 5)) << shift;
+        output[14] |= ((bits2 & (0x7Full <<  2)) >>  2) << shift;
+        output[15] |= ((bits2 & (0x7Full <<  9)) >>  9) << shift;
     }
 
     template<typename T>
@@ -848,6 +870,170 @@ public:
             return _pack7(input);
         case 64:
             return _packN<u64>(input);
+        }
+    }
+
+    void unpack(u64* output, int n) {
+        switch(n) {
+        case 0:
+            break;
+        case 1:
+            _unpack1(output, 0);
+            break;
+        case 2:
+            _unpack2(output, 0);
+            break;
+        case 3:
+            _unpack3(output, 0);
+            break;
+        case 4:
+            _unpack3(output, 0);
+            break;
+        case 5:
+            _unpack5(output, 0);
+            break;
+        case 6:
+            _unpack6(output, 0);
+            break;
+        case 7:
+            _unpack7(output, 0);
+            break;
+        case 8:
+            _unpackN<u8>(output, 0);
+            break;
+        case 9:
+            _unpackN<u8>(output, 0);
+            _unpack1(output, 8);
+            break;
+        case 10:
+            _unpackN<u8>(output, 0);
+            _unpack2(output, 8);
+            break;
+        case 11:
+            _unpackN<u8>(output, 0);
+            _unpack3(output, 8);
+            break;
+        case 12:
+            _unpackN<u8>(output, 0);
+            _unpack4(output, 8);
+            break;
+        case 13:
+            _unpackN<u8>(output, 0);
+            _unpack5(output, 8);
+            break;
+        case 14:
+            _unpackN<u8>(output, 0);
+            _unpack6(output, 8);
+            break;
+        case 15:
+            _unpackN<u8>(output, 0);
+            _unpack7(output, 8);
+            break;
+        case 16:
+            _unpackN<u16>(output, 0);
+            break;
+        case 17:
+            _unpackN<u16>(output, 0);
+            _unpack1(output, 16);
+            break;
+        case 18:
+            _unpackN<u16>(output, 0);
+            _unpack2(output, 16);
+            break;
+        case 19:
+            _unpackN<u16>(output, 0);
+            _unpack3(output, 16);
+            break;
+        case 20:
+            _unpackN<u16>(output, 0);
+            _unpack4(output, 16);
+            break;
+        case 21:
+            _unpackN<u16>(output, 0);
+            _unpack5(output, 16);
+            break;
+        case 22:
+            _unpackN<u16>(output, 0);
+            _unpack6(output, 16);
+            break;
+        case 23:
+            _unpackN<u16>(output, 0);
+            _unpack7(output, 16);
+            break;
+        case 24:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            break;
+        case 25:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack1(output, 24);
+            break;
+        case 26:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack2(output, 24);
+            break;
+        case 27:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack3(output, 24);
+            break;
+        case 28:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack4(output, 24);
+            break;
+        case 29:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack5(output, 24);
+            break;
+        case 30:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack6(output, 24);
+            break;
+        case 31:
+            _unpackN<u16>(output, 0);
+            _unpackN<u8>(output, 16);
+            _unpack7(output, 24);
+            break;
+        case 32:
+            _unpackN<u32>(output, 0);
+            break;
+        case 33:
+            _unpackN<u32>(output, 0);
+            _unpack1(output, 32);
+            break;
+        case 34:
+            _unpackN<u32>(output, 0);
+            _unpack2(output, 32);
+            break;
+        case 35:
+            _unpackN<u32>(output, 0);
+            _unpack3(output, 32);
+            break;
+        case 36:
+            _unpackN<u32>(output, 0);
+            _unpack4(output, 32);
+            break;
+        case 37:
+            _unpackN<u32>(output, 0);
+            _unpack5(output, 32);
+            break;
+        case 38:
+            _unpackN<u32>(output, 0);
+            _unpack6(output, 32);
+            break;
+        case 39:
+            _unpackN<u32>(output, 0);
+            _unpack7(output, 32);
+            break;
+        case 40:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            break;
         }
     }
 
