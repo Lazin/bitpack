@@ -103,7 +103,7 @@ public:
     void _unpack1(u64* output, int shift) {
         u16 bits = stream_.read_raw<u16>();
         for (int i = 0; i < 16; i++) {
-            output[i] |= static_cast<u64>((bits & (3 << i)) >> i) << shift;
+            output[i] |= static_cast<u64>((bits & (1 << i)) >> i) << shift;
         }
     }
 
@@ -167,7 +167,7 @@ public:
         output[7]  |= ((bits0 & (7u << 21)) >> 21) << shift;
         output[8]  |= ((bits0 & (7u << 24)) >> 24) << shift;
         output[9]  |= ((bits0 & (7u << 27)) >> 27) << shift;
-        output[10] |= (((bits0 & (3u << 30)) >> 30) | (bits1 & 4)) << shift;
+        output[10] |= (((bits0 & (3u << 30)) >> 30) | ((bits1 & 1u) << 2)) << shift;
         output[11] |= ((bits1 & (7u <<  1)) >> 1)  << shift;
         output[12] |= ((bits1 & (7u <<  4)) >> 4)  << shift;
         output[13] |= ((bits1 & (7u <<  7)) >> 7)  << shift;
@@ -378,7 +378,7 @@ public:
     template<typename T>
     void _shiftN(u64* input) {
         for (int i = 0; i < 16; i++) {
-            input[i] >>= sizeof(T);
+            input[i] >>= 8*sizeof(T);
         }
     }
 
@@ -887,7 +887,7 @@ public:
             _unpack3(output, 0);
             break;
         case 4:
-            _unpack3(output, 0);
+            _unpack4(output, 0);
             break;
         case 5:
             _unpack5(output, 0);
@@ -1034,6 +1034,130 @@ public:
             _unpackN<u32>(output, 0);
             _unpackN<u8>(output, 32);
             break;
+        case 41:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack1(output, 40);
+            break;
+        case 42:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack2(output, 40);
+            break;
+        case 43:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack3(output, 40);
+            break;
+        case 44:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack4(output, 40);
+            break;
+        case 45:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack5(output, 40);
+            break;
+        case 46:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack6(output, 40);
+            break;
+        case 47:
+            _unpackN<u32>(output, 0);
+            _unpackN<u8>(output, 32);
+            _unpack7(output, 40);
+            break;
+        case 48:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            break;
+        case 49:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack1(output, 48);
+            break;
+        case 50:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack2(output, 48);
+            break;
+        case 51:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack3(output, 48);
+            break;
+        case 52:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack4(output, 48);
+            break;
+        case 53:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack5(output, 48);
+            break;
+        case 54:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack6(output, 48);
+            break;
+        case 55:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpack7(output, 48);
+            break;
+        case 56:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            break;
+        case 57:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack1(output, 56);
+            break;
+        case 58:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack2(output, 56);
+            break;
+        case 59:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack3(output, 56);
+            break;
+        case 60:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack4(output, 56);
+            break;
+        case 61:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack5(output, 56);
+            break;
+        case 62:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack6(output, 56);
+            break;
+        case 63:
+            _unpackN<u32>(output, 0);
+            _unpackN<u16>(output, 32);
+            _unpackN<u8>(output, 48);
+            _unpack7(output, 56);
+            break;
+        case 64:
+            _unpackN<u64>(output, 0);
+            break;
         }
     }
 
@@ -1066,7 +1190,7 @@ public:
         return true;
     }
 
-    void unpack(u64* output, int n) {
+    void dumb_unpack(u64* output, int n) {
         int size = 16;
         u8 bits = 0;
         int bitindex = 8;
@@ -1098,33 +1222,50 @@ int get_bit_width(u64 x) {
 int main(int argc, char *argv[])
 {
     const size_t N = 1000000;
-    const u64 mask = 0x7FFFFFul;
-    RandomWalk rwalk(mask);
-    MemoryStream stream(0x10000);
-    Encoder encoder(stream);
-    std::vector<u64> expected;
-    const int stride = 16;
-    for (size_t i = 0; i < N; i += stride) {
-        u64 input[stride];
-        for (int j = 0; j < stride; j++) {
-            input[j] = rwalk.generate();
-        }
-        bool res = encoder.pack(input, get_bit_width(mask));
-        if (!res) {
-            break;
-        }
-        std::copy(input, input + stride, std::back_inserter(expected));
-    }
-    // Read back
-    stream.reset();
-    for (u32 i = 0; i < expected.size(); i += stride) {
-        u64 output[stride];
-        encoder.unpack(output, get_bit_width(mask));
-        for (u32 j = 0; j < stride; j++) {
-            if (output[j] != expected[i + j]) {
-                throw "not equal";
+    std::vector<u64> masks = {0xF};
+//    u64 full = 0xFFFFFFFFFFFFFFFFull;
+//    for (int i = 0; i < 64; i++) {
+//        masks.push_back(full >> i);
+//    }
+    int run = 0;
+    for (u64 mask: masks) {
+        try {
+            RandomWalk rwalk(mask);
+            MemoryStream stream(0x10000);
+            Encoder encoder(stream);
+            std::vector<u64> expected;
+            const int stride = 16;
+            for (size_t i = 0; i < N; i += stride) {
+                u64 input[stride];
+                for (int j = 0; j < stride; j++) {
+                    input[j] = rwalk.generate();
+                }
+                std::copy(input, input + stride, std::back_inserter(expected));
+                bool res = encoder.pack(input, get_bit_width(mask));
+                if (!res) {
+                    expected.resize(expected.size() - stride);
+                    break;
+                }
+            }
+            // Read back
+            stream.reset();
+            for (u32 i = 0; i < expected.size(); i += stride) {
+                u64 output[stride] = {};
+                encoder.unpack(output, get_bit_width(mask));
+                for (u32 j = 0; j < stride; j++) {
+                    auto actual = output[j];
+                    auto expect = expected[i + j];
+                    if (actual != expect) {
+                        std::cout << "Error at run " << run << ", mask:" << std::hex << mask << ", index: " << i + j << ", expected: " << expect
+                                  << ", actual: " << actual << std::endl;
+                        throw "not equal";
+                    }
+                }
             }
         }
+        catch (...) {
+        }
+        run++;
     }
     return 0;
 }
